@@ -12,4 +12,6 @@
 8. The New Tool   Page a user who is authenticated is able to add new tools
 9. The Home page Displays the Tool, Name and the id
 10. When you click on a single item you need to be a signed in user to view the details of a tool
-11. There is a login page  and a logout page 
+11. There is a login page  and a logout page
+
+12. Link to the youtube video of this project https://youtu.be/PQYwF8xfqq8
