@@ -1,17 +1,54 @@
-# Finnal-Project-Capstone
-1. This is the best Project becuase it combines all the skills i learned all the way
-2. 
-3. How to use it after clonning it
-   . First  activate the virtual environment by running this command "source venv/bin/activate "
-   . Then run the command "python manage.py runserver"
-   . Then go to 127.0.01:8000
-   
-5. You need to be an authenticated user to be able to view everysinge item
-6. On the navigation menu there are five links  eg "Home" , "Login" ,"Logout", "New Tool" and "Acount"
-7. On the Account links this page displays the detail of the current user  including the email address
-8. The New Tool   Page a user who is authenticated is able to add new tools
-9. The Home page Displays the Tool, Name and the id
-10. When you click on a single item you need to be a signed in user to view the details of a tool
-11. There is a login page  and a logout page
 
-12. Link to the youtube video of this project https://youtu.be/PQYwF8xfqq8
+ FINAL PROJECT CAPSTONE – Tool Manager
+
+
+Why this project is sufficiently distinct from previous projects
+
+This project is not a variation of the e-commerce (Project 2), social network (Project 4), or any other previous project. Unlike the prior assignments, this application focuses tool management
+
+OWNERSHIP
+  .Each tool is owned by the user who created it. Only the owner can edit or delete a tool.
+  .Only authenticated users can create a tool
+Custom tool attributes 
+  Tools have fields like `Description` , `product name`, and `id`.
+  The home page shows notjust a list of tools  but also counts of tools.
+
+
+Why this project meets the complexity requirement
+
+ .Responsive UI – Uses Bootstrap 5 with a custom CSS file for consistent styling across devices.
+
+How to Run the Project
+
+1.Clone the repository 
+   `git clone https://github.com/kellysimiyu/web50/projects/2020/x/capstone`
+
+2.Navigate into the project folder  
+   `cd capstone`
+
+3.activate a virtual environment  
+   source venv/bin/activate    
+Install dependencies
+ pip install django ,pillow 
+ 
+Run migrations
+
+python manage.py makemigrations
+python manage.py migrate
+Create a superuser 
+python manage.py createsuperuser
+
+Start the development server
+python manage.py runserver
+
+Visit http://127.0.0.1:8000
+
+Authentication & Features
+ .Users must register and log in to view tools.
+
+ .Unauthenticated users only see a login/register prompt.
+
+ .The Account page shows the  name of the logged in user  and email address 
+
+
+
