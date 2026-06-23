@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!--The container for the profile-->
+    <!--It has both the User name and the email address-->
+    <div class="profile" style="border-radius: 50px;background-color: blueviolet; width:300px; padding: 20px; height: 100; border-radius: 20px; align-items: center;">
+       User:{{ request.user.username }}  
+        Email:{{request.user.email}}
+    </div> 
+            
+
+</body>
+</html>

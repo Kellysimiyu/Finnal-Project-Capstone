@@ -1,0 +1,17 @@
+
+{% extends "jobs/layout.html"%}
+
+{% block body%}
+       
+    <h4>Jobs {{job.id}}</h4> <!--Takes the job id -->
+    <div class="job" style="background-color: black; border-radius: 20px; color: dodgerblue; padding: 10px;">
+    <ul>
+        <h3>{{job.Title}}</h3> <!--Displays on the detail page-->
+        <p>{{job.Description}}</p> <!--Display the Job Description-->
+        <p> Price {{job.Price}}</p> <!--Display the price -->
+        <p>{{job.Location}}</p><!--and lastly the location-->
+    </ul>
+    </div>
+    <a href="{% url 'jobs:index'%}">Home</a><!--The  link to go back to the home page -->
+ 
+{% endblock%}

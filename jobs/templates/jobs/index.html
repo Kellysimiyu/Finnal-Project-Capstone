@@ -1,0 +1,53 @@
+
+{% extends "jobs/layout.html"%}
+
+{% block body%}
+<!--The link to the user profile-->
+  <div class="usr">
+        <a href="{% url 'jobs:profile' %}"> Profile {{ request.user.username }}</a>
+        
+     </div>
+ <!--The navigation  bar with inline styling -->
+    <div class="nav"  style="border: 2px; border-radius: 20px; background-color: grey; color: white; padding: 10px;">
+        <a href="{% url 'jobs:index' %}">Home</a>
+        <a href="{% url 'jobs:new' %}">Post</a>
+        <a href="{% url 'jobs:login' %}">Login</a>
+        <a href="{% url 'jobs:register' %}">Register</a>
+         <a href="{% url 'jobs:logout' %}">Logout</a>
+    </div>
+
+
+    <h1  style="color: blue; text-align: center;"id="head">GlobalGiGs</h1><!--The first heading with the h1 tag  and the color is blue-->
+    
+<div class="main"> <!--The main  container-->
+    {% for jobs in Jobs %} <!-- The for loop to display all the jobs from the data base  on the main page-->
+           <div class="jobs" style="border: 2px solid black;  padding: 5px; margin-bottom: 15px; background-color:black; padding-bottom: 10px; text-align: center; border-radius: 20px; "  >    <!--The child container , i added inline styling because i just love it -->
+                <a href="{% url 'jobs:detail' jobs.id %}">  <!--Links every jobs to its detail page-->
+                  <h4 style="font-size:20px; color: dodgerblue;">{{jobs.Title}}</h4>  <!--This H4 displays the the title of the job on the main page -->
+                  <p style="color:white;">{{jobs.Description}}</p><!--Paragraph for the job Discription-->
+                </a>
+           </div>
+     
+    {% empty%}
+             <li> No Jobs found</li><!--This function displays "No Jobs found" when there is no jobs on this website , is it a function or an if statement ??-->
+    {% endfor %}
+    <!--Button  with the class of change-->  
+    <button onclick="change()">Change Heading</button>  
+       
+</div>         
+ <script>
+       // script to alert you when the page loads 
+      // alert("welcome to Globalgigs")
+       // function to change the heading of the page when i click the change heading button
+       function change(){
+           const header =document.querySelector('h1');
+           if (header.innerHTML=="GlobalGiGs"){
+              header.innerHTML='Welcome to globalgigs';
+           }else{
+              header.innerHTML="GlobalGigs";
+           }
+       }
+       
+ </script>
+{% endblock%} <!-- close the loop-->    
+    

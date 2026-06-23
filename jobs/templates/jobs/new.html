@@ -1,0 +1,11 @@
+{% extends "jobs/layout.html" %}
+
+{% block body %}
+<!-- form to add new jobs-->
+ <h4 style="text-align: center;">Post New Jobs</h4>
+    <form action="{% url 'jobs:new' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}  <!--csrf token to prevent cross site token forgery-->
+        {{ form.as_p }}  <!--THis tag adds the  form to this page -->
+        <button type="submit">Post Job</button>
+    </form>
+{% endblock %}
