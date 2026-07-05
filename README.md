@@ -1,138 +1,242 @@
-# GlobalGiGs - Job Portal Web Application
+GlobalGiGs – Job Portal Web Application
 
-## Distinctiveness and Complexity
+Overview
+GlobalGiGs is a full‑stack job listing platform built with Django. It allows users to create an account, browse job opportunities, and post their own job listings. Each job includes a title, description, location, and price. The application features a personalized profile page where users can see all the jobs they have posted, alongside their account details.
 
-GlobalGiGs is a job portal web application that stands apart from previous course projects in several significant ways. Unlike Project 2 (Commerce), which focuses on auction listings and bidding, GlobalGiGs creates a job marketplace where users can post and browse job opportunities. This is fundamentally different from Project 4 (Network), which is essentially a social media platform, whereas GlobalGiGs is a professional job listing service.
+The project is designed as a professional marketplace, distinct from the auction‑style bidding of Project 2 (Commerce) and the social‑media feed of Project 4 (Network). Instead, it offers a clean, business‑oriented interface for connecting service providers with potential clients.
 
-The complexity of GlobalGiGs is demonstrated through its complete user authentication system and personalized user profiles. The application features a Job model with fields including Title, Description, Location, and Price, all linked to users through a foreign key relationship. The project implements a full authentication system with registration, login, and logout functionality, along with a user profile page that displays personal information and user statistics.
+Distinctiveness
+GlobalGiGs is not a re‑skin of any previous CS50 Web project. It occupies a unique domain – a job board – which is fundamentally different from an auction house, an encyclopedia, an email client, or a social network.
 
-The front-end implementation showcases JavaScript-powered features that enhance user experience, including a dynamic heading changer and interactive elements that respond to user actions. These JavaScript features work seamlessly with the Django back-end, creating a responsive and engaging user interface.
+Domain‑specific purpose: Whereas Commerce revolves around dynamic bidding and time‑limited auctions, GlobalGiGs is built around fixed‑price job postings. Users post a job with a clear price, and interested parties can view the details. There is no auction mechanism, no watchlist, and no bidding war – the focus is on straightforward service offerings.
 
-The project also incorporates Django features including custom form handling with validation, proper URL routing with named URL patterns, and user authentication with session management. The use of inline styling throughout the templates demonstrates a consistent design approach while keeping the code structure clean and maintainable.
+User‑centric job management: Previous projects allowed users to create content (listings, posts, pages), but none provided a dedicated profile dashboard that aggregates a user’s own content in a structured way. In GlobalGiGs, every authenticated user has a profile page that lists only the jobs they have posted, along with their username and email. This gives users a clear overview of their activity and serves as a personal portfolio.
 
-## Files and Directories
+Interactive front‑end enhancements: While other projects used JavaScript for API calls or dynamic UI updates, GlobalGiGs integrates two distinctive client‑side features that improve usability: a dynamic heading changer (click a button to cycle through motivational messages) and a personalised welcome alert that greets the user by name upon login. These are not merely cosmetic – they demonstrate a conscious effort to make the interface engaging and responsive.
 
-### Project Root
-- `manage.py` - Django's command-line utility for administrative tasks
-- `requirements.txt` - Lists all Python dependencies needed to run the application
-- `README.md` - This comprehensive documentation file
+Tailored navigation: The navigation bar adapts intelligently based on authentication status. Unauthenticated visitors see “Register” and “Login”; authenticated users see their username, a “Profile” link, and a “Logout” button. This flow is simpler and more intuitive than the dual‑navigation systems seen in earlier projects.
 
-### Configuration Files
-- `capstone/settings.py` - Django project settings including database configuration, installed apps, and middleware
-- `capstone/urls.py` - Main URL routing configuration that includes the jobs app URLs
-- `capstone/wsgi.py` - WSGI configuration for deployment
+In short, GlobalGiGs is a purposeful job‑listing ecosystem with a clean UI, personalised user spaces, and interactive front‑end touches that set it apart from the prior assignments.
 
-### Jobs Application
-- `jobs/models.py` - Contains the database models:
-  - `Jobs` - Main model storing job listings with Title, Description, Price, Location, and posted_by fields
-  - `posted_by` - Foreign key linking jobs to users who posted them
+Complexity
+The project demonstrates significant complexity through the following aspects:
 
-- `jobs/views.py` - Contains all view functions:
-  - `index()` - Renders the homepage displaying all available jobs
-  - `detail()` - Shows detailed information for a specific job
-  - `new()` - Handles the creation of new job listings with form validation and user association
-  - `login_view()` - Authenticates users and logs them into the system
-  - `logout_view()` - Logs users out of the system
-  - `register()` - Creates new user accounts with validation
-  - `profile()` - Displays a personalized profile page for authenticated users
+1. Custom Data Model with Relationships
+The Jobs model is a custom Django model with five fields:
 
-- `jobs/urls.py` - URL routing specific to the jobs app with named URL patterns and app namespace
-- `jobs/forms.py` - Contains the NewJobsForm for creating job listings with validation
+Title (CharField, max length 64)
 
-### Templates
-- `jobs/templates/jobs/layout.html` - Base template with common HTML structure and navigation bar
-- `jobs/templates/jobs/index.html` - Homepage displaying all job listings in styled cards
-- `jobs/templates/jobs/detail.html` - Detailed view of individual job listings
-- `jobs/templates/jobs/new.html` - Form page for adding new job listings
-- `jobs/templates/jobs/login.html` - User login page with authentication form
-- `jobs/templates/jobs/register.html` - User registration page with validation
-- `jobs/templates/jobs/profile.html` - User profile page displaying personal information and posted jobs
+Description (TextField)
 
-## Features
+Location (CharField, max length 64)
 
-### User Authentication System
-- **Registration**: Users can create new accounts with username, email, and password
-- **Login/Logout**: Secure authentication system with session management
-- **User Profile**: Personalized profile page showing user information
-- **User Association**: All jobs are linked to the user who posted them
+Price (IntegerField)
 
-### Job Management
-- **Browse Jobs**: All users can view available job listings on the homepage
-- **Job Details**: Click on any job to view complete information
-- **Post Jobs**: Authenticated users can post new job listings
-- **Job Cards**: Each job displays Title, Description, Location, and Price
+posted_by (ForeignKey to the built‑in User model, with on_delete=models.CASCADE)
 
-### User Profile
-- **Personal Information**: Displays username, email.
+This model is directly tied to Django’s authentication system, ensuring that every job is linked to its creator. This foreign‑key relationship is more complex than a simple one‑off model, as it requires careful handling in views to associate the current user with a new job.
+
+2. Full Authentication Flow
+The application implements a complete user authentication cycle: registration (with email validation), login, logout, and session management.
+
+The registration view includes custom validation to ensure usernames are unique and passwords match.
+
+Protected routes (e.g., posting a job) are guarded with the @login_required decorator, preventing unauthorised access.
+
+3. CRUD Operations (Create & Read)
+Create: The /new endpoint uses a Django ModelForm (NewJobsForm) with built‑in validation. Upon submission, the form saves a new Jobs instance, automatically assigning the posted_by field to the currently logged‑in user.
+
+Read: The homepage (/) lists all jobs in a card‑based layout. The /detail/<int:job_id> route displays a full‑page view of a single job, pulling data via the primary key.
+
+4. Personalised Profile Page
+The /profile view is accessible only to logged‑in users. It retrieves the current user object and filters all jobs where posted_by matches that user.
+
+The template displays the user’s username and email, followed by a list of their posted jobs – complete with titles, descriptions, prices, and locations. This aggregates data from two different tables (User and Jobs), demonstrating a many‑to‑one relationship.
+
+5. JavaScript Interactivity
+Two distinct JavaScript functions are included:
+
+A heading changer that cycles through three pre‑defined phrases when a button is clicked.
+
+A welcome alert that fires on page load, displaying a personalised greeting to the authenticated user (or a generic message to visitors).
+
+These functions are triggered by DOM events and manipulate the page content dynamically, showing an understanding of client‑side scripting beyond simple form validation.
+
+6. Django Best Practices
+URL namespacing (app_name = "jobs") and named URL patterns are used throughout, making the code maintainable.
+
+Templates inherit from a base layout.html using Django’s template inheritance, reducing repetition and centralising styling.
+
+Inline styling is used consistently to maintain a cohesive visual theme without relying on external CSS frameworks (though this could be improved, it shows deliberate design choice).
+
+Taken together, these features represent a substantial integration of Django’s ORM, authentication system, form handling, and template engine, combined with custom JavaScript – all of which exceeds the complexity of the course’s earlier projects.
+
+File-by-File Breakdown
+Below is a comprehensive description of every file I created or modified for this project.
+
+Project Root
+manage.py – Django’s command‑line utility. Used for running the server, making migrations, and interacting with the project. I did not modify this file.
+
+requirements.txt – Lists all Python dependencies (Django, etc.). Ensures the project can be easily set up on any machine.
+
+README.md – This document.
+
+Configuration (capstone/)
+capstone/settings.py – Contains project‑wide settings. I added 'jobs' to the INSTALLED_APPS list and configured the database (SQLite by default). No other core settings were changed.
+
+capstone/urls.py – The main URL configuration. I included the line:
+
+python
+path('', include('jobs.urls'))
+This routes all base‑URL requests to the jobs app, keeping the project root clean.
+
+capstone/wsgi.py – Standard WSGI configuration for deployment. Not modified.
+
+Jobs Application (jobs/)
+Models (jobs/models.py)
+Defines the single data model:
+
+python
+class Jobs(models.Model):
+    Title = models.CharField(max_length=64)
+    Description = models.TextField()
+    Location = models.CharField(max_length=64)
+    Price = models.IntegerField()
+    posted_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="jobs")
+
+    def __str__(self):
+        return f"{self.Title} (by {self.posted_by})"
+The related_name="jobs" allows easy reverse lookup from a User instance (e.g., user.jobs.all()).
+
+The __str__ method provides a human‑readable representation for the admin interface.
+
+Views (jobs/views.py)
+Contains seven view functions:
+
+index(request) – Retrieves all Jobs objects ordered by ID (or could be modified to order by date) and renders index.html with a context containing the list of jobs.
+
+detail(request, job_id) – Uses get_object_or_404 to fetch a single job by its primary key. Passes the job object to detail.html.
+
+new(request) – Handles both GET and POST.
+
+On GET: displays an empty NewJobsForm.
+
+On POST: validates the form; if valid, saves the job with commit=False, assigns posted_by = request.user, then saves to the database. Redirects to the job’s detail page.
+
+Decorated with @login_required to restrict access.
+
+login_view(request) – Authenticates using authenticate and login. If credentials are valid, redirects to index; otherwise, re‑renders login.html with an error message.
+
+logout_view(request) – Calls logout and redirects to index.
+
+register(request) – Creates a new user using User.objects.create_user. Validates that the username is not taken and that the password and confirmation match. On success, logs the user in and redirects to index.
+
+profile(request) – Decorated with @login_required. Retrieves request.user and filters Jobs.objects.filter(posted_by=request.user). Passes the user object and the filtered job list to profile.html.
+
+URL Configuration (jobs/urls.py)
+Defines four URL patterns with names:
+
+"" → index (name = "index")
+
+"detail/<int:job_id>" → detail (name = "detail")
+
+"new" → new (name = "new")
+
+"login" → login_view (name = "login")
+
+"logout" → logout_view (name = "logout")
+
+"register" → register (name = "register")
+
+"profile" → profile (name = "profile")
+
+An app_name = "jobs" is set to enable namespacing (e.g., {% url 'jobs:index' %}).
+
+Forms (jobs/forms.py)
+Contains NewJobsForm, a ModelForm for the Jobs model:
+
+python
+class Meta:
+    model = Jobs
+    fields = ['Title', 'Description', 'Location', 'Price']
+The posted_by field is intentionally excluded – it is set in the view. The form provides automatic validation for required fields and data types (e.g., Price must be an integer).
 
 
-### Interactive Features
-- **JavaScript Heading Changer**: Interactive button to change page heading
-- **Welcome Alert**: Personalized welcome message on page load
-- **Responsive Navigation**: Navbar adapts based on user authentication status
-- **Inline Styling**: Consistent design approach using inline CSS
+Templates (jobs/templates/jobs/)
+All templates inherit from layout.html using {% extends "jobs/layout.html" %}.
 
-## How to Run the Application
+layout.html – The base template. Contains:
 
-### Prerequisites
-- Python 3.8  installed on your system
-- pip package manager
-- Virtual environment 
+HTML <head> with a consistent title.
 
-### Installation Steps
+A navigation bar (<nav>) with conditional links based on user.is_authenticated.
 
-1. **Clone the repository**
-```bash
-git clone <repository-url>
-cd capstone
+A {% block body %} placeholder for page‑specific content.
+
+Inline CSS (within <style> tags) that defines colours, card styles, button appearances, and layout rules.
+
+A JavaScript block at the bottom that defines two functions: changeHeading() and a window.onload welcome alert.
+
+index.html – The homepage.
+
+Extends layout.html.
+
+Displays a list of all jobs using a for loop. Each job is rendered as a card with title, description, location, and price.
+
+The title is a hyperlink to the job’s detail page.
+
+detail.html – Shows a single job.
+
+Displays all fields of the job in a clear, centred layout.
+
+Includes a “Back to all jobs” link.
+
+new.html – The job‑posting form.
+
+Uses {{ form.as_p }} to render the Django form.
+
+Contains a “Submit” button and a CSRF token.
+
+login.html – Login form.
+
+Username and password fields.
+
+Displays an error message if authentication fails.
+
+register.html – Registration form.
+
+Username, email, password, and confirmation fields.
+
+Inline validation messages (e.g., password mismatch) are handled in the view and passed via context.
+
+profile.html – User profile.
+
+Shows the user’s username and email.
+
+Lists all jobs posted by that user, each with title, description, location, and price.
+
+If the user has no jobs, a friendly message is shown.
+ 
+
+How to Run the Application
+Clone the repository and navigate to the project directory.
+
+Create a virtual environment 
 
 
+python3 -m venv venv
+source venv/bin/activate  
+Install dependencies:
 
 
-User Guide
-Registration and Login
-Click "Register" in the navigation bar
-
-Fill in username, email, and password
-
-Click "Register" to create your account
-
-You will be automatically logged in
-
-The navigation bar will update to show your username
-
-Profile Page
-After logging in, click "Profile" in the navigation bar
-
-View your personal information (username, email)
+pip install -r requirements.txt
+Apply migrations:
 
 
-Posting a Job
-Click "Post" in the navigation bar
+python manage.py makemigrations
+python manage.py migrate
+Run the server:
 
-Fill in the job details (Title, Description, Location, Price)
 
-Click "Submit" to post the job
-
-The job will appear on the homepage and in your profile
-
-Viewing Jobs
-All jobs are displayed on the homepage
-
-Click on any job title to view full details
-
-The detail page shows complete job information
-
-Technology Stack
-Backend: Django
-
-Database: SQLite 
-
-Frontend: HTML5, CSS3, JavaScript 
-
-Styling: Inline CSS 
-
-Form Handling: Django forms with built-in validation
-
-Authentication: Django's built-in authentication system
-
+python manage.py runserver
+Visit http://127.0.0.1:8000/ in your browser.
